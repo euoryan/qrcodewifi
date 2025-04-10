@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi QR-Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3b82f6;
+            --primary-hover: #2563eb;
+            --primary-light: #dbeafe;
+            --text-dark: #1f2937;
+            --text-medium: #4b5563;
+            --text-light: #6b7280;
+            --border-color: #e5e7eb;
+            --background: #f9fafb;
+            --card-background: #ffffff;
+            --success-color: #10b981;
+            --error-color: #ef4444;
+            --input-background: #f3f4f6;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.2s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-dark);
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+        }
+
+        .app-card {
+            background-color: var(--card-background);
+            border-radius: 16px;
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+        }
+
+        .app-header {
+            padding: 24px;
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .logo-container h1 {
+            font-size: 24px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .tagline {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .main-content {
+            display: flex;
+            flex-wrap: wrap;
+            padding: 24px;
+            gap: 32px;
+        }
+
+        .qr-section {
+            flex: 1;
+            min-width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+        }
+
+        .qr-container {
+            position: relative;
+            width: 200px;
+            height: 200px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: var(--transition);
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .qr-container:hover {
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        #qr-code {
+            width: 200px;
+            height: 200px;
+            border-radius: 8px;
+            display: block;
+        }
+
+        .logo-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 4px;
+            padding: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .qr-actions {
+            display: flex;
+            gap: 16px;
+        }
+
+        .icon-btn {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .icon-btn:disabled {
+            background-color: var(--border-color);
+            color: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .form-section {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        label {
+            font-size: 14px;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        input, select {
+            height: 46px;
+            padding: 0 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            color: var(--text-dark);
+            background-color: var(--input-background);
+            transition: var(--transition);
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px var(--primary-light);
+        }
+
+        input:hover, select:hover {
+            border-color: var(--primary-color);
+        }
+
+        input::placeholder {
+            color: var(--text-light);
+        }
+
+        .password-input {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .password-input input {
+            width: 100%;
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .toggle-password:hover {
+            color: var(--text-medium);
+        }
+
+        .toggle-group {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 8px;
+        }
+
+        .toggle-label {
+            font-size: 14px;
+            color: var(--text-medium);
+            font-weight: 500;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 44px;
+            height: 24px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+        .slider.round {
+            border-radius: 24px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
+        .button-group {
+            margin-top: 8px;
+        }
+
+        .primary-btn {
+            width: 100%;
+            height: 46px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .primary-btn:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .primary-btn:active {
+            transform: translateY(1px);
+        }
+
+        .app-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .app-footer p {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column-reverse;
+            }
+            
+            .qr-section {
+                order: 2;
+            }
+            
+            .form-section {
+                order: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+
+        .success-message {
+            color: var(--success-color);
+            font-size: 12px;
+            margin-top: 4px;
+        }
+        
+        #canvas-container {
+            display: none;
+            position: absolute;
+            visibility: hidden;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-card">
+            <header class="app-header">
+                <div class="logo-container">
+                    <svg class="logo" width="40" height="40" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Logo placeholder -->
+                        <circle cx="100" cy="100" r="90" fill="#3b82f6"/>
+                        <text x="100" y="120" font-family="Arial" font-size="60" text-anchor="middle" fill="white">A</text>
+                    </svg>
+                    <h1>WiFi QR-Code</h1>
+                </div>
+                <p class="tagline">Gere QR-Codes em segundos</p>
+            </header>
+
+            <div class="main-content">
+                <div class="qr-section">
+                    <div class="qr-container">
+                        <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=WIFI:;" alt="QR Code">
+                        <div id="logo-overlay" class="logo-overlay hidden">
+                            <!-- Logo será inserida aqui -->
+                        </div>
+                    </div>
+                    <div class="qr-actions">
+                        <button id="download-btn" class="icon-btn" title="Download QR Code" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                        <button id="share-btn" class="icon-btn" title="Compartilhar QR Code" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="input-group">
+                        <label for="ssid">Nome da Rede</label>
+                        <input id="ssid" type="text" placeholder="Nome da sua rede WiFi" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">Senha</label>
+                        <div class="password-input">
+                            <input id="password" type="password" placeholder="Senha da rede WiFi">
+                            <button type="button" id="toggle-password" class="toggle-password" aria-label="Mostrar senha">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="encryption">Tipo de Segurança</label>
+                        <select id="encryption">
+                            <option value="WPA">WPA/WPA2/WPA3</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">Sem senha</option>
+                        </select>
+                    </div>
+                    
+                    <div class="toggle-group">
+                        <label for="include-logo" class="toggle-label">Incluir Logo</label>
+                        <label class="switch">
+                            <input type="checkbox" id="include-logo">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" id="generate-btn" class="primary-btn">Gerar QR Code</button>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="app-footer">
+                <p>Aponte a câmera do seu celular para o QR code para conectar-se ao WiFi.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Canvas oculto para gerar o PNG -->
+    <div id="canvas-container">
+        <canvas id="qr-canvas" width="300" height="300"></canvas>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos DOM
+            const ssidInput = document.getElementById('ssid');
+            const passwordInput = document.getElementById('password');
+            const encryptionSelect = document.getElementById('encryption');
+            const includeLogoCheckbox = document.getElementById('include-logo');
+            const generateBtn = document.getElementById('generate-btn');
+            const downloadBtn = document.getElementById('download-btn');
+            const shareBtn = document.getElementById('share-btn');
+            const togglePasswordBtn = document.getElementById('toggle-password');
+            const qrCodeImg = document.getElementById('qr-code');
+            const logoOverlay = document.getElementById('logo-overlay');
+            const canvas = document.getElementById('qr-canvas');
+            const ctx = canvas.getContext('2d');
+            
+            // Logo padrão
+            const defaultLogo = `<svg width="40" height="40" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="100" cy="100" r="90" fill="#3b82f6"/>
+                <text x="100" y="120" font-family="Arial" font-size="60" text-anchor="middle" fill="white">A</text>
+            </svg>`;
+            
+            // Tentar carregar a logo personalizada
+            fetch('logo-alexandre-a.svg')
+                .then(response => {
+                    if (!response.ok) throw new Error('Logo não encontrada');
+                    return response.text();
+                })
+                .then(svgData => {
+                    // Inserir no header
+                    document.querySelector('.logo').outerHTML = svgData;
+                    
+                    // Inserir no overlay
+                    logoOverlay.innerHTML = svgData;
+                    
+                    // Estilizar a logo no overlay
+                    const logoInOverlay = logoOverlay.querySelector('svg');
+                    if (logoInOverlay) {
+                        logoInOverlay.setAttribute('width', '40');
+                        logoInOverlay.setAttribute('height', '40');
+                        logoInOverlay.style.position = 'absolute';
+                        logoInOverlay.style.filter = 'drop-shadow(0px 0px 2px white)';
+                    }
+                })
+                .catch(() => {
+                    // Usar logo padrão em caso de erro
+                    document.querySelector('.logo').outerHTML = defaultLogo;
+                    logoOverlay.innerHTML = defaultLogo;
+                });
+            
+            // Event listeners
+            togglePasswordBtn.addEventListener('click', function() {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                
+                // Atualizar ícone
+                this.querySelector('svg').innerHTML = type === 'password' ? 
+                    `<path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle>` :
+                    `<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path><line x1="1" y1="1" x2="23" y2="23"></line>`;
+            });
+            
+            includeLogoCheckbox.addEventListener('change', function() {
+                logoOverlay.classList.toggle('hidden', !this.checked);
+            });
+            
+            generateBtn.addEventListener('click', generateQRCode);
+            downloadBtn.addEventListener('click', downloadQRCode);
+            shareBtn.addEventListener('click', shareQRCode);
+            
+            // Função para gerar o QR code
+            function generateQRCode() {
+                const ssid = ssidInput.value.trim();
+                const password = passwordInput.value;
+                const encryption = encryptionSelect.value;
+                
+                if (!ssid) {
+                    alert('Por favor, informe o nome da rede WiFi.');
+                    return;
+                }
+                
+                // Gerar texto para o QR code
+                let qrText = `WIFI:S:${ssid};`;
+                
+                if (encryption === 'nopass') {
+                    qrText += 'T:nopass;';
+                } else {
+                    qrText += `T:${encryption};P:${password};`;
+                }
+                
+                qrText += 'H:false;;';
+                
+                // Atualizar QR code
+                qrCodeImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrText)}`;
+                
+                // Habilitar botões e mostrar logo
+                downloadBtn.disabled = false;
+                shareBtn.disabled = false;
+                logoOverlay.classList.toggle('hidden', !includeLogoCheckbox.checked);
+            }
+            
+            // Função para download do QR code em PNG
+            function downloadQRCode() {
+                const ssid = ssidInput.value.trim();
+                if (!ssid) return;
+                
+                // Limpar o canvas
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Primeiro, vamos carregar a imagem do QR code
+                const qrImage = new Image();
+                qrImage.crossOrigin = 'Anonymous';
+                qrImage.onload = function() {
+                    // Desenhar o QR code no canvas
+                    ctx.drawImage(qrImage, 0, 0, canvas.width, canvas.height);
+                    
+                    // Se a opção de incluir logo estiver marcada
+                    if (includeLogoCheckbox.checked) {
+                        // Vamos preparar a logo como uma imagem
+                        const logoSvg = logoOverlay.querySelector('svg');
+                        if (logoSvg) {
+                            // Converter SVG para uma string de dados
+                            const serializer = new XMLSerializer();
+                            const logoSvgString = serializer.serializeToString(logoSvg);
+                            const logoDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(logoSvgString);
+                            
+                            // Criar uma imagem a partir do SVG
+                            const logoImg = new Image();
+                            logoImg.onload = function() {
+                                // Adicionar um fundo branco para a logo
+                                ctx.fillStyle = 'white';
+                                ctx.fillRect(canvas.width/2 - 20, canvas.height/2 - 20, 40, 40);
+                                
+                                // Desenhar a logo no centro do QR code
+                                ctx.drawImage(logoImg, canvas.width/2 - 20, canvas.height/2 - 20, 40, 40);
+                                
+                                // Depois que tudo está no canvas, criar o download
+                                finalizarDownload();
+                            };
+                            logoImg.src = logoDataUrl;
+                        } else {
+                            finalizarDownload();
+                        }
+                    } else {
+                        finalizarDownload();
+                    }
+                };
+                qrImage.src = qrCodeImg.src;
+                
+                function finalizarDownload() {
+                    // Converter o canvas para PNG
+                    const dataUrl = canvas.toDataURL('image/png');
+                    
+                    // Criar link para download
+                    const downloadLink = document.createElement('a');
+                    downloadLink.href = dataUrl;
+                    downloadLink.download = `wifi-${ssid}.png`;
+                    document.body.appendChild(downloadLink);
+                    downloadLink.click();
+                    document.body.removeChild(downloadLink);
+                }
+            }
+            
+            // Função para compartilhar o QR code
+            function shareQRCode() {
+                const ssid = ssidInput.value.trim();
+                if (!ssid || !navigator.share) {
+                    alert('Compartilhamento não disponível no seu navegador.');
+                    return;
+                }
+                
+                // Criar uma imagem do QR code para compartilhar
+                const qrImage = new Image();
+                qrImage.crossOrigin = 'Anonymous';
+                qrImage.src = qrCodeImg.src;
+                
+                qrImage.onload = function() {
+                    // Limpar o canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    
+                    // Desenhar QR code
+                    ctx.drawImage(qrImage, 0, 0, canvas.width, canvas.height);
+                    
+                    // Se a opção de incluir logo estiver marcada
+                    if (includeLogoCheckbox.checked) {
+                        const logoSvg = logoOverlay.querySelector('svg');
+                        if (logoSvg) {
+                            // Converter SVG para uma string de dados
+                            const serializer = new XMLSerializer();
+                            const logoSvgString = serializer.serializeToString(logoSvg);
+                            const logoDataUrl = 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(logoSvgString);
+                            
+                            // Criar uma imagem a partir do SVG
+                            const logoImg = new Image();
+                            logoImg.onload = function() {
+                                // Adicionar um fundo branco para a logo
+                                ctx.fillStyle = 'white';
+                                ctx.fillRect(canvas.width/2 - 20, canvas.height/2 - 20, 40, 40);
+                                
+                                // Desenhar a logo no centro do QR code
+                                ctx.drawImage(logoImg, canvas.width/2 - 20, canvas.height/2 - 20, 40, 40);
+                                
+                                // Depois que tudo está no canvas, compartilhar
+                                compartilharImagem();
+                            };
+                            logoImg.src = logoDataUrl;
+                        } else {
+                            compartilharImagem();
+                        }
+                    } else {
+                        compartilharImagem();
+                    }
+                };
+                
+                async function compartilharImagem() {
+                    try {
+                        // Converter o canvas para um blob
+                        canvas.toBlob(async function(blob) {
+                            const file = new File([blob], `wifi-${ssid}.png`, { type: 'image/png' });
+                            
+                            // Compartilhar usando a Web Share API
+                            await navigator.share({
+                                files: [file],
+                                title: 'WiFi Connect QR Code',
+                                text: `Conecte-se à rede WiFi: ${ssid}`
+                            });
+                        }, 'image/png');
+                    } catch (error) {
+                        console.error('Erro ao compartilhar:', error);
+                        
+                        // Tentar compartilhar apenas o texto se o compartilhamento da imagem falhar
+                        try {
+                            await navigator.share({
+                                title: 'WiFi Connect QR Code',
+                                text: `Conecte-se à rede WiFi: ${ssid}`
+                            });
+                        } catch (err) {
+                            alert('Não foi possível compartilhar o QR code.');
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
