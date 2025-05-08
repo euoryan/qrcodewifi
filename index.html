@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi QR-Code</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="app-card">
+            <header class="app-header">
+                <div class="logo-container">
+                    <svg class="logo" width="40" height="40" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Logo placeholder -->
+                        <circle cx="100" cy="100" r="90" fill="#3b82f6"/>
+                        <text x="100" y="120" font-family="Arial" font-size="60" text-anchor="middle" fill="white">A</text>
+                    </svg>
+                    <h1>WiFi QR-Code</h1>
+                </div>
+                <p class="tagline">Gere QR-Codes em segundos</p>
+            </header>
+
+            <div class="main-content">
+                <div class="qr-section">
+                    <div class="qr-container">
+                        <img id="qr-code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=WIFI:;" alt="QR Code">
+                        <div id="logo-overlay" class="logo-overlay hidden">
+                            <!-- Logo será inserida aqui -->
+                        </div>
+                    </div>
+                    <div class="qr-actions">
+                        <button id="download-btn" class="icon-btn" title="Download QR Code" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="7 10 12 15 17 10"></polyline>
+                                <line x1="12" y1="15" x2="12" y2="3"></line>
+                            </svg>
+                        </button>
+                        <button id="share-btn" class="icon-btn" title="Compartilhar QR Code" disabled>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="18" cy="5" r="3"></circle>
+                                <circle cx="6" cy="12" r="3"></circle>
+                                <circle cx="18" cy="19" r="3"></circle>
+                                <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"></line>
+                                <line x1="15.41" y1="6.51" x2="8.59" y2="10.49"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <div class="input-group">
+                        <label for="ssid">Nome da Rede</label>
+                        <input id="ssid" type="text" placeholder="Nome da sua rede WiFi" required>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password">Senha</label>
+                        <div class="password-input">
+                            <input id="password" type="password" placeholder="Senha da rede WiFi">
+                            <button type="button" id="toggle-password" class="toggle-password" aria-label="Mostrar senha">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="encryption">Tipo de Segurança</label>
+                        <select id="encryption">
+                            <option value="WPA">WPA/WPA2/WPA3</option>
+                            <option value="WEP">WEP</option>
+                            <option value="nopass">Sem senha</option>
+                        </select>
+                    </div>
+                    
+                    <div class="toggle-group">
+                        <label for="include-logo" class="toggle-label">Incluir Logo</label>
+                        <label class="switch">
+                            <input type="checkbox" id="include-logo">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                    
+                    <div class="button-group">
+                        <button type="button" id="generate-btn" class="primary-btn">Gerar QR Code</button>
+                    </div>
+                </div>
+            </div>
+            
+            <footer class="app-footer">
+                <p>Aponte a câmera do seu celular para o QR code para conectar-se ao WiFi.</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Canvas oculto para gerar o PNG -->
+    <div id="canvas-container">
+        <canvas id="qr-canvas" width="300" height="300"></canvas>
+    </div>
+
+    <script src="assets/js/script.js"></script>
+</body>
+</html>
